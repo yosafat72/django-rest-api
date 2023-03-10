@@ -37,3 +37,19 @@ def save(request):
         return Response.ok(values=transformer.singleTransform(user), message="Successfully added data")
     else:
         return Response.badRequest(message="Bad request")
+
+
+@csrf_exempt
+def findById(request):
+    if request.method == 'POST':
+        requestData = json.loads(request.body)
+
+        user = Users.objects.filter(id=requestData['id']).first()
+
+        if not user:
+            return Response.ok(message="User not found")
+
+        user = transformer.singleTransform(user)
+        return Response.ok(values=user, message="User found")
+    else:
+        return Response.badRequest(message="Bad request")
